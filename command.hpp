@@ -40,12 +40,15 @@ inline std::optional<std::string> select_string_by_number_simple(
     }
   }
 }
+enum class ExecMode { NonInteractive, Interactive };
+
+using Action = std::function<void(const std::vector<std::string>&, ExecMode)>;
 
 struct Command {
   std::string name;
   std::string description;
   std::map<std::string, std::unique_ptr<Command>> subcommands;
-  std::function<void(const std::vector<std::string>& args)> action;
+  Action action;
 
   Command(std::string n, std::string d)
       : name(std::move(n)), description(std::move(d)), action(nullptr) {}
@@ -89,7 +92,7 @@ struct Command {
     }
 
     if (action) {
-      action(args);
+      action(args, ExecMode::NonInteractive);
       return;
     }
 
@@ -112,7 +115,7 @@ struct Command {
 
     while (true) {
       if (current->action) {
-        current->action({});
+        current->action({}, ExecMode::Interactive);
         std::cout << "Please enter to continue ...";
         std::string dummy;
         std::getline(std::cin, dummy);

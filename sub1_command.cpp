@@ -3,7 +3,7 @@
 
 auto make_sub1_command() -> std::unique_ptr<cmd::Command> {
   auto sub1 = std::make_unique<cmd::Command>("sub1", "sub1 の説明");
-  sub1->action = [](const std::vector<std::string>& args) {
+  sub1->action = [](const std::vector<std::string>& args, cmd::ExecMode mode) {
     if (args.empty()) {
       std::cout << "sub1 のデフォルト動作\n";
     } else {
