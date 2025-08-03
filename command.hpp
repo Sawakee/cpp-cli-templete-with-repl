@@ -14,7 +14,7 @@ namespace cmd {
 
 inline std::optional<std::string> select_string_by_number_simple(
     const std::vector<std::string>& options,
-    const std::string& prompt = "番号を選択してください: ", std::ostream& os = std::cout,
+    const std::string& prompt = "Select number: ", std::ostream& os = std::cout,
     std::istream& is = std::cin) {
   if (options.empty()) return std::nullopt;
 
@@ -116,7 +116,7 @@ struct Command {
         std::cout << "Please enter to continue ...";
         std::string dummy;
         std::getline(std::cin, dummy);
-        current = this;  // 最初のコマンド（ルート）に戻る
+        current = this;  // Back to root.
         std::cout << "\n";
         continue;
       }
