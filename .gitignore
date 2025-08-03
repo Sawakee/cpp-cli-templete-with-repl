@@ -1,0 +1,88 @@
+# === CMake の出力・中間ファイル ===
+# ビルドディレクトリを使っているなら通常は build/ を丸ごと無視する
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/*.dir/               # 一部生成されるディレクトリ（例: Visual Studio 関連）
+/Testing/
+*.cmake
+*.cbp
+*.user
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*.ilk
+*.pdb
+*.idb
+*.ipdb
+*.app
+
+# ビルドシステム固有のキャッシュや成果物
+*.pyc
+*.pyo
+
+# === 実行ファイル / 中間成果物 ===
+# 生成されるバイナリ名が明確なら列挙してもよい
+mycli
+mycli.exe
+
+# === IDE / エディタ ===
+# Visual Studio Code
+.vscode/
+
+# CLion / JetBrains
+.idea/
+*.iml
+*.iws
+out/
+
+# Xcode
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/
+DerivedData/
+
+# Eclipse
+.metadata/
+*.launch
+.settings/
+
+# === OS 固有 ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# その他一時ファイル
+*~
+*.swp
+*.swo
+.#*
+*.log
+
+# === ユーザー固有設定 ===
+# パスワードやシークレットファイルを誤って入れないようにする例（必要なら追加）
+# config/local_settings.json
+# .env
+
+# === テスト結果やレポート ===
+/coverage/
+/*.gcda
+/*.gcno
+
+# === CCache（使っているならキャッシュディレクトリ） ===
+/.ccache/
+
+# === GitHub Actions ワークフロー成果物など（必要に応じて） ===
+/.github/workflows/*.cache
