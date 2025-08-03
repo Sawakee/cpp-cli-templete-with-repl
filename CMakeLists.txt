@@ -6,10 +6,7 @@ project(mycli VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ソースを自動収集。CONFIGURE_DEPENDS により新しいファイル追加時に再構成がトリガーされる（cmake を再実行する必要は基本的に不要になる）。
-file(GLOB SOURCES
-    "**/*.cpp"
-)
+file(GLOB SOURCES "*.cpp" "**/*.cpp" "**/**/*.cpp")
 
 # 実行ファイル作成
 add_executable(mycli ${SOURCES})
