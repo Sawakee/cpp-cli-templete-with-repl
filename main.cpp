@@ -1,24 +1,23 @@
-#include <memory>
-#include "./command.hpp"
-#include "./repl.hpp"
-#include "./subA/subA.hpp"
-#include "./subB/subB.hpp"
-#include "./utils.hpp"
+#include "command.hpp"
 
-// to_tokens, split_line, repl などは省略または適宜実装をincludeしてください。
+// 各サブツリーを返す関数を外部で宣言
+std::unique_ptr<cmd::Command> make_sub1_command();
+std::unique_ptr<cmd::Command> make_sub2_command();
 
 int main(int argc, char* argv[]) {
-  auto root = std::make_shared<Command>();
-  root->name = "mycli";
-  root->description = "階層的サブコマンドを持つCLI";
+  using namespace cmd;
 
-  root->add_subcommand(make_subA_command());
-  root->add_subcommand(make_subB_command());
+  Command root("app", "トップレベルのコマンド");
 
-  auto tokens = to_tokens(argc, argv);
-  if (tokens.empty()) {
-    repl(root);
-    return 0;
+  // 各翻訳単位の builder から受け取り接続（所有権は root が持つ）
+  root.addSubcommand(make_sub1_command());
+  root.addSubcommand(make_sub2_command());
+
+  std::vector<std::string> args;
+  for (int i = 1; i < argc; ++i) {
+    args.emplace_back(argv[i]);
   }
-  return root->execute(tokens, 0, "");
+
+  root.run(std::move(args));
+  return 0;
 }
