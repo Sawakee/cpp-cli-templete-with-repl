@@ -6,12 +6,24 @@
 #include <map>
 #include <memory>
 #include <optional>
-#include <sstream>
 #include <string>
 #include <vector>
 
 namespace cmd {
 
+/// Buil-in command constants
+namespace builtin {
+inline constexpr const char* kHelp = "help";
+inline constexpr const char* kExit = "exit";
+inline constexpr const char* lhelpFlag = "--help";
+}  // namespace builtin
+
+/// Interactive string selection utility
+/// @param options Available string options for selection
+/// @param prompt User prompt message
+/// @param os Output stream for displaying options
+/// @param is Input stream for reading user input
+/// @return Selected string option or std::nullopt if no valid selection is made
 inline std::optional<std::string> select_string_by_number_simple(
     const std::vector<std::string>& options,
     const std::string& prompt = "Select number: ", std::ostream& os = std::cout,
@@ -31,16 +43,17 @@ inline std::optional<std::string> select_string_by_number_simple(
     try {
       int choice = std::stoi(line);
       if (choice >= 1 && static_cast<size_t>(choice) <= options.size()) {
-        return options[choice - 1];
-      } else {
-        os << "Invalid Number.\n";
+        return options[static_cast<size_t>(choice - 1)];
       }
+      os << "Invalid Number.\n";
     } catch (...) {
       os << "Enter Number.\n";
     }
   }
 }
-enum class ExecMode { NonInteractive, Interactive };
+
+/// COmmand exectuion mode
+enum class ExecMode : std::uint8_t { kNonInteractive, kInteractive };
 
 using Action = std::function<void(const std::vector<std::string>&, ExecMode)>;
 
@@ -86,13 +99,13 @@ struct Command {
   }
 
   void execute(std::vector<std::string> args) {
-    if (!args.empty() && args[0] == "--help") {
+    if (!args.empty() && args[0] == builtin::lhelpFlag) {
       printHelp();
       return;
     }
 
     if (action) {
-      action(args, ExecMode::NonInteractive);
+      action(args, ExecMode::kNonInteractive);
       return;
     }
 
@@ -102,12 +115,15 @@ struct Command {
     }
 
     const std::string next = args.front();
-    auto it = subcommands.find(next);
-    if (it != subcommands.end()) {
+    auto* subcommand = getSubcommand(next);
+    if (subcommand != nullptr) {
       args.erase(args.begin());
-      it->second->execute(std::move(args));
+      subcommand->execute(std::move(args));
       return;
     }
+
+    std::cerr << "Unknown command: " << next << "\n";
+    printHelp();
   }
 
   void interactive_execute() {
@@ -115,7 +131,8 @@ struct Command {
 
     while (true) {
       if (current->action) {
-        current->action({}, ExecMode::Interactive);
+        current->action({}, ExecMode::kInteractive);
+        std::cout << "\n";
         std::cout << "Please enter to continue ...";
         std::string dummy;
         std::getline(std::cin, dummy);
@@ -130,19 +147,20 @@ struct Command {
       }
 
       std::vector<std::string> names;
+      names.reserve(current->subcommands.size() + 2);
       for (const auto& [k, _] : current->subcommands) {
         names.push_back(k);
       }
-      names.emplace_back("help");
-      names.emplace_back("exit");
+      names.emplace_back(builtin::kHelp);
+      names.emplace_back(builtin::kExit);
 
       std::optional<std::string> selected_name =
           select_string_by_number_simple(names, "Select command: ");
 
       if (!selected_name) break;
 
-      if (*selected_name == "exit") break;
-      if (*selected_name == "help") {
+      if (*selected_name == builtin::kExit) break;
+      if (*selected_name == builtin::kHelp) {
         current->printHelp();
         continue;
       }
