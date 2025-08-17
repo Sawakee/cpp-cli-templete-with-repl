@@ -1,6 +1,6 @@
 # === CMake の出力・中間ファイル ===
 # ビルドディレクトリを使っているなら通常は build/ を丸ごと無視する
-/build/
+build
 /CMakeFiles/
 /CMakeCache.txt
 /cmake_install.cmake
