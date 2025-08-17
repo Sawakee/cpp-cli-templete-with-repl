@@ -13,7 +13,6 @@ See the `example/` directory for a minimal but extensible CLI implementation usi
 ## Build Instructions (Explicit File List in example Directory)
 
 ```sh
-cd example
 mkdir -p build
 cd build
 cmake ..
@@ -23,5 +22,5 @@ make
 ## How to Run
 
 ```sh
-./mycli
+./example_cli
 ```

@@ -176,6 +176,14 @@ struct Command {
       execute(std::move(args));
     }
   }
+
+  void run(int argc, char* argv[]) {
+    std::vector<std::string> args;
+    for (int i = 1; i < argc; ++i) {
+      args.emplace_back(argv[i]);
+    }
+    run(std::move(args));
+  }
 };
 
 }  // namespace cmd

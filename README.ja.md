@@ -12,7 +12,6 @@
 ## ビルド方法（example ディレクトリで全ファイル明示指定方式）
 
 ```sh
-cd example
 mkdir -p build
 cd build
 cmake ..
@@ -22,7 +21,7 @@ make
 ## 実行方法
 
 ```sh
-./mycli
+./example_cli
 ```
 
 ## CMakeLists.txt のポイント

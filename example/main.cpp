@@ -13,11 +13,6 @@ int main(int argc, char* argv[]) {
   root->addSubcommand(sub1::create());
   root->addSubcommand(sub2::create());
 
-  std::vector<std::string> args;
-  for (int i = 1; i < argc; ++i) {
-    args.emplace_back(argv[i]);
-  }
-
-  root->run(std::move(args));
+  root->run(argc, argv);
   return 0;
 }
